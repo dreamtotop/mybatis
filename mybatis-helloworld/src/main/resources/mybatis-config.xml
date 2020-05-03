@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+<!--    开启驼峰命名转换-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+
+
+<!--    定义mapper xml的文件路径(也可以在application.properties中配置)-->
+    <mappers>
+        <mapper resource="mapper/EmployeeMapper.xml"/>
+    </mappers>
+
+</configuration>

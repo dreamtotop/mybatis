@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.top.mybatishelloworld.dao.DepartmentMapper">
+
+    <resultMap id="baseMap" type="org.top.mybatishelloworld.model.Department">
+        <id property="id" column="id"/>
+        <result property="deptName" column="dept_name"/>
+    </resultMap>
+
+    <select id="getDeptById" resultMap="baseMap" parameterType="int">
+        select * from department where id=#{id}
+    </select>
+
+<!--  collection : 定义关联的集合类型元素的封装规则  -->
+    <resultMap id="plusMap" type="org.top.mybatishelloworld.model.DepartmentPlus">
+        <id property="id" column="did"/>
+        <result property="deptName" column="dept_name"/>
+<!--     collection :定义集合的封装规则   -->
+<!--       ofType : 定义集合中元素的类型 -->
+        <collection property="emps" ofType="org.top.mybatishelloworld.model.Employee">
+            <id property="id" column="eid"/>
+            <result property="empName" column="emp_name"/>
+            <result property="age" column="age"/>
+            <result property="address" column="address"/>
+        </collection>
+    </resultMap>
+
+    <select id="getDeptByIdPlus" resultMap="plusMap">
+        select d.id did, d.dept_name dept_name,
+        e.id eid , e.emp_name emp_name, e.age age, e.address address
+        from department d
+        left join employee_plus e
+        on d.id = e.dept_id
+    </select>
+
+<!--    分步查询的封装规则    -->
+    <resultMap id="stepMap" type="org.top.mybatishelloworld.model.DepartmentPlus">
+        <id property="id" column="id"/>
+        <result property="deptName" column="dept_name"/>
+        <collection property="emps"
+                    select="org.top.mybatishelloworld.dao.EmployeePlusMapper.getEmpsByDeptId"
+        column="id">
+<!--    扩展 ： 如果要传递多列的值，将多列的值封装成Map传递，
+        column={key1 = column1 , key2=column2}
+          example : column = {deptId = id,....}             -->
+        </collection>
+    </resultMap>
+
+    <select id="getDeptByIdStep" resultMap="stepMap">
+        select * from department where id = #{id}
+    </select>
+
+</mapper>

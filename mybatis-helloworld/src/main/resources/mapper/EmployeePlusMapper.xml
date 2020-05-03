@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.top.mybatishelloworld.dao.EmployeePlusMapper">
+<!--    自定义结果封装  -->
+    <resultMap id="baseMap" type="org.top.mybatishelloworld.model.Employee">
+<!--       id: 指定主键列的封装规则-->
+        <id property="id" column="id"></id>
+<!--        reslt : 指定其他列的封装规则 -->
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="address" column="address"></result>
+    </resultMap>
+    <sql id="baseSql">
+        id , emp_name , age , address
+    </sql>
+    <select id="getEmpById" resultMap="baseMap">
+        select
+        <include refid="baseSql"/>
+        from employee where id = #{id}
+    </select>
+
+<!--             级联属性的查询 的自定义结果封装                       -->
+   <!--  第一种  -->
+    <resultMap id="diffMap1" type="org.top.mybatishelloworld.model.EmployeePlus">
+        <id property="id" column="id"/>
+        <result property="address" column="address"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="dept.id" column="did"/>
+        <result property="dept.deptName" column="dept_name"/>
+    </resultMap>
+
+   <!--  第二种  -->
+    <resultMap id="diffMap2" type="org.top.mybatishelloworld.model.EmployeePlus">
+        <id property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+        <!--   association 可以指定联合的java对象     -->
+            <!--   property：级联属性名    javaType ：级联对象的类型  -->
+        <association property="dept" javaType="org.top.mybatishelloworld.model.Department">
+            <id property="id" column="did"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>
+
+    <select id="getEmpAndDeptById" resultMap="diffMap2"> <!--diffMap1 -->
+        select e.id id , e.emp_name emp_name, e.age age , e.address address,
+        d.id did , d.dept_name dept_name
+        from employee_plus e , department d
+        where e.dept_id = d.id and e.id=#{id}
+    </select>
+
+    <!--    第三种   -->
+    <!--  使用 association标签 进行分步查询 -->
+    <resultMap id="diffMap3" type="org.top.mybatishelloworld.model.EmployeePlus">
+        <id property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+        <!--   association 定义关联对象的封装规则     -->
+        <!--   select： 表明当前属性是调用select指定的方法查出的结果     -->
+        <!--    column : 指定传入select方法的参数    -->
+        <!--    然后将查询结果封装到 property 指定的属性中  -->
+        <association property="dept"
+            select="org.top.mybatishelloworld.dao.DepartmentMapper.getDeptById"
+            column="dept_id">
+        </association>
+    </resultMap>
+    <select id="getEmtStepById" resultMap="diffMap3">
+        select * from employee_plus where id=#{id}
+    </select>
+
+        <!--  =================================================       -->
+    <resultMap id="stepMap" type="org.top.mybatishelloworld.model.Employee">
+        <id property="id" column="id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="address" column="address"/>
+    </resultMap>
+    <select id="getEmpsByDeptId" resultMap="stepMap">
+        select * from employee_plus where dept_id =#{deptId};
+    </select>
+
+</mapper>

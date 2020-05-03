@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.top.mybatishelloworld.dao.EmployeeMapper">
+
+<!--    w未开启别名配置时，使用全类名的路径-->
+    <select id="getEmpById" resultType="org.top.mybatishelloworld.model.Employee">
+<!--    <select id="getEmpById" resultType="Employee">  默认的别名-->
+<!--    <select id="getEmpById" resultType="emp"> @Alias 指定的别名-->
+        select * from employee where id=#{id,jdbcType=BIGINT}
+    </select>
+
+<!--  parameterType 该参数可以省略  -->
+<!--  useGeneratedKeys 使用主键自增策略， keyProperty 指定将主键的值封装给javabean的哪个属性 -->
+    <insert id="addEmployee" parameterType="org.top.mybatishelloworld.model.Employee"
+            useGeneratedKeys="true" keyProperty="id">
+<!-- 如果数据库不支持主键自增，使用改标签获取当前主键序列值 <selectKey></selectKey> -->
+        insert  into employee(emp_name,age,address) values(#{empName},#{age},#{address})
+    </insert>
+
+    <update id="updateEmployee">
+        update employee set emp_name=#{emp.empName},age=#{emp.age},address=#{emp.address}
+        where id =#{emp.id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from employee where id=#{id}
+    </delete>
+
+
+<!--    多参数处理 -->
+    <select id="getEmpByIdAndName" resultType="org.top.mybatishelloworld.model.Employee">
+        select * from employee
+        where id=#{id} and emp_name=#{empName}
+    </select>
+
+    <select id="getEmpByIds" resultType="org.top.mybatishelloworld.model.Employee">
+        <!--select * from employee where id = #{list[0]}-->
+        select * from employee where id = #{ids[0]}
+    </select>
+
+<!--    方法返回值为List，resultType是List中的元素类型-->
+    <select id="getEmpsByNameLike" resultType="employee"> <!-- 使用别名-->
+        select * from employee where emp_name like #{empName}
+    </select>
+
+    <select id="getEmpByIdAndRetuenMap" resultType="java.util.Map">
+        select * from employee where id=#{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getEmpsByNameLikeAndRetuenMap" resultType="org.top.mybatishelloworld.model.Employee">
+        select * from employee where emp_name like #{empName}
+    </select>
+
+</mapper>
