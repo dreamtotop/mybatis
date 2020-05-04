@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.top.mybatiscache.mapper.EmployeeMapper">
+<cache eviction="FIFO" flushInterval="60000" readOnly="false" size="1024"> </cache>
+<!--    eviction : 缓存策略
+        flushInterval ： 缓存刷新间隔 (缓存多长时间清空一次，默认不清空，可设置毫秒值)
+        readOnly ： 是否只读
+               true：只读，mybatis认为所有从缓存中获取数据的操作都是只读操作，不会修改数据。
+                  mybatis为了加快读取速度，直接将数据在缓存中的引用交给用户。（不安全，速度快）
+               false ：非只读，mybatis认为获取的数据可能会被修改，mybatis会利用序列化和反序列化的技术克隆一份数据给用户。（安全，速度慢）
+        size : 缓存存放多少元素。
+        type：指定自定义缓存的全类名（实现cache接口）。
+-->
+
+    <select id="getEmpById" resultType="org.top.mybatiscache.model.Employee" parameterType="integer">
+        select * from employee where id=#{id}
+    </select>
+</mapper>
