@@ -25,7 +25,14 @@ public interface EmployeeMapper {
     void updateEmpBySet(@Param("employee")Employee employee);
 
     //foreach标签的使用
-    List<Employee> getEmpsByConditionForeach(@Param("ids") List<Integer> ids);
+    /*
+     * collection:
+     * 1. 使用@Param注解，则为注解指定的名称
+     * 2. 没有@Param主角，传入参数为List --> list , 数组 ---> array , Set--->set , Map -->map
+     */
+    //List<Employee> getEmpsByConditionForeach(@Param("ids") List<Integer> ids);
+    //List<Employee> getEmpsByConditionForeach(List<Integer> ids);
+    List<Employee> getEmpsByConditionForeach(Integer [] ids);
 
     //foreach批量保存
     void batchSaveByConditionForeach(@Param("emps")List<Employee> employee);

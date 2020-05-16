@@ -143,7 +143,13 @@
               遍历Map时，index是Map的key，item是value   -->
     <select id="getEmpsByConditionForeach" resultType="org.top.mybatisdynamicsql.model.Employee">
         select * from employee where id in
-        <foreach collection="ids" item="item_id" separator="," open="(" close=")" index="index">
+<!--        <foreach collection="ids" item="item_id" separator="," open="(" close=")" index="index">-->
+<!--            #{item_id}-->
+<!--        </foreach>-->
+<!--        <foreach collection="list" item="item_id" separator="," open="(" close=")" index="index">-->
+<!--            #{item_id}-->
+<!--        </foreach>-->
+        <foreach collection="array" item="item_id" separator="," open="(" close=")" index="index">
             #{item_id}
         </foreach>
     </select>

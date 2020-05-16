@@ -65,7 +65,8 @@ class EmployeeMapperTest {
 
     @Test
     void testForeach(){
-        List<Employee> emps = employeeMapper.getEmpsByConditionForeach(Arrays.asList(1, 2));
+        //List<Employee> emps = employeeMapper.getEmpsByConditionForeach(Arrays.asList(1, 2));
+        List<Employee> emps = employeeMapper.getEmpsByConditionForeach(new Integer[]{1, 2});
         System.out.println(emps);
     }
 
